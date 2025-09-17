@@ -1,0 +1,7 @@
+python
+Ultralytics for Yolo 
+OpenCV
+Pywhatkit
+WhatsApp web login
+HTML,css,javascript
+googlecolab or jupyter notebook
