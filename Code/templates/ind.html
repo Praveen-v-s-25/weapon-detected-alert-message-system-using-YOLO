@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Weapon Detection</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #ffcc00, #ff6600);
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            color: black;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            margin: 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        #start {
+            background-color: green;
+            color: white;
+            border: 2px solid white;
+        }
+        #stop {
+            background-color: red;
+            color: white;
+            border: 2px solid white;
+        }
+        #start:hover {
+            background-color: darkgreen;
+        }
+        #stop:hover {
+            background-color: darkred;
+        }
+        #video_feed {
+            width: 60%;
+            margin-top: 20px;
+            border: 5px solid white;
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Weapon Detection</h1>
+    <button id="start" onclick="startCamera()">Start Camera</button>
+    <button id="stop" onclick="stopCamera()">Stop Camera</button>
+    
+    <div>
+        <img id="video_feed" src="" alt="">
+    </div>
+
+    <script>
+        function startCamera() {
+            fetch('/start_camera')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "started") {
+                        let videoFeed = document.getElementById("video_feed");
+                        videoFeed.src = "/video_feed?" + new Date().getTime();
+                        videoFeed.style.display = "block";
+                    } else if (data.status === "error") {
+                        alert("Failed to access camera. Please check camera permissions.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function stopCamera() {
+            fetch('/stop_camera')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "stopped") {
+                        let videoFeed = document.getElementById("video_feed");
+                        videoFeed.src = "";
+                        videoFeed.style.display = "none";
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

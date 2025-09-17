@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Weapon Detection</title>
+    <style>
+        body {
+            background-color:rgb(236, 248, 7);
+            color:Black;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-top: 20px;
+            color:black;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            border-style: solid;
+            border-color:whilte;
+        }
+        #start {
+            background-color: green;
+            color: white;
+        }
+        #stop {
+            background-color: red;
+            color: white;
+            
+        }
+        #video_feed {
+            width: 60%;
+            margin-top: 20px;
+            border: 3px solid white;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Weapon Detection</h1>
+    <button id="start" onclick="startCamera()">Start Camera</button>
+    <button id="stop" onclick="stopCamera()">Stop Camera</button>
+    
+    <div>
+        <img id="video_feed" src="" alt="Live Video Feed Not started">
+    </div>
+
+    <script>
+        function startCamera() {
+            fetch('/start_camera')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "started") {
+                        document.getElementById("video_feed").src = "/video_feed?" + new Date().getTime();
+                    } else if (data.status === "error") {
+                        alert("Failed to access camera. Please check camera permissions.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function stopCamera() {
+            fetch('/stop_camera')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "stopped") {
+                        document.getElementById("video_feed").src = "";
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
